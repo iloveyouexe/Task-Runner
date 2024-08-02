@@ -66,7 +66,7 @@ namespace TaskRunner
                 return;
             }
 
-            RegisterTaskbar(taskbarHandle);
+            // RegisterTaskbar(taskbarHandle);
 
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA
             {
@@ -99,10 +99,18 @@ namespace TaskRunner
             }
 
             abd.uEdge = position;
-            NativeMethods.SHAppBarMessage((uint)NativeMethods.ABMessage.ABM_SETPOS, ref abd);
-
-            Console.WriteLine($"Taskbar moved to {position}.");
+            var hresult = NativeMethods.SHAppBarMessage((uint)NativeMethods.ABMessage.ABM_SETPOS, ref abd);
+            Console.WriteLine($"Attempted to move taskbar to {position}. ");   
+            if (hresult == 0)
+            {
+                Console.WriteLine("Taskbar moved. ");
+            }
+            else
+            {
+                Console.WriteLine($"HRESULT is: 0x{hresult:x8}");
+            }
         }
+        
 
         static void RegisterTaskbar(IntPtr taskbarHandle)
         {
